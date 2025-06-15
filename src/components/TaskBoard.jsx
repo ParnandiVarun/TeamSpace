@@ -11,7 +11,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
-import "./TaskBoard.css"; // External CSS for styling
+import "./TaskBoard.css";
 
 const TaskBoard = ({ workspaceId }) => {
   const [tasks, setTasks] = useState([]);
@@ -20,9 +20,7 @@ const TaskBoard = ({ workspaceId }) => {
   const [assignedTo, setAssignedTo] = useState("");
   const [uidToEmailMap, setUidToEmailMap] = useState({});
   const [workspace, setWorkspace] = useState(null);
-  const [filterEmail, setFilterEmail] = useState("");
 
-  // Fetch workspace members for assignment dropdown
   useEffect(() => {
     const fetchWorkspace = async () => {
       const docRef = doc(firestore, "workspaces", workspaceId);
@@ -45,7 +43,6 @@ const TaskBoard = ({ workspaceId }) => {
     fetchWorkspace();
   }, [workspaceId]);
 
-  // Real-time task listener
   useEffect(() => {
     const q = query(
       collection(firestore, `workspaces/${workspaceId}/tasks`),
@@ -86,48 +83,51 @@ const TaskBoard = ({ workspaceId }) => {
 
   const renderColumn = (status) => (
     <div className="task-column">
-      <h3>{status.toUpperCase()}</h3>
+      <h3>{status}</h3>
       {tasks
-        .filter(
-          (task) =>
-            task.status === status &&
-            (!filterEmail || task.assignedTo === filterEmail)
-        )
+        .filter((task) => task.status === status)
         .map((task) => (
           <div key={task.id} className="task-card">
-            <p>
-              <strong>{task.title}</strong>
-            </p>
+            <p className="font-semibold">{task.title}</p>
             {task.assignedTo && (
-              <p className="assigned-to">Assigned: {task.assignedTo}</p>
+              <p className="text-sm text-blue-600">👤 {task.assignedTo}</p>
             )}
             {task.dueDate && (
-              <p className="due-date">
-                Due:{" "}
+              <p className="text-sm text-gray-500">
+                📅 Due:{" "}
                 {new Date(task.dueDate.seconds * 1000).toLocaleDateString()}
               </p>
             )}
-            <div className="task-actions">
+            <div className="task-buttons">
               {status !== "todo" && (
-                <button onClick={() => updateTaskStatus(task.id, "todo")}>
+                <button
+                  onClick={() => updateTaskStatus(task.id, "todo")}
+                  className="todo-btn"
+                >
                   To Do
                 </button>
               )}
               {status !== "inprogress" && (
-                <button onClick={() => updateTaskStatus(task.id, "inprogress")}>
+                <button
+                  onClick={() => updateTaskStatus(task.id, "inprogress")}
+                  className="inprogress-btn"
+                >
                   In Progress
                 </button>
               )}
               {status !== "done" && (
-                <button onClick={() => updateTaskStatus(task.id, "done")}>
+                <button
+                  onClick={() => updateTaskStatus(task.id, "done")}
+                  className="done-btn"
+                >
                   Done
                 </button>
               )}
               <button
-                className="delete-btn"
                 onClick={() => handleDeleteTask(task.id)}
+                className="delete-btn"
               >
-                🗑
+                🗑 Delete
               </button>
             </div>
           </div>
@@ -137,14 +137,15 @@ const TaskBoard = ({ workspaceId }) => {
 
   return (
     <div className="task-board">
-      <h2>Task Board</h2>
+      <h2>📋 Task Board</h2>
 
+      {/* Add Task Form */}
       <div className="task-form">
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter task title"
+          placeholder="Task title"
         />
         <input
           type="date"
@@ -162,31 +163,10 @@ const TaskBoard = ({ workspaceId }) => {
             </option>
           ))}
         </select>
-        <button onClick={handleAddTask}>Add Task</button>
+        <button onClick={handleAddTask}>➕ Add Task</button>
       </div>
 
-      {/* Filter Dropdown */}
-      <div style={{ margin: "1rem 0" }}>
-        <label htmlFor="filter">Filter by Assignee: </label>
-        <select
-          id="filter"
-          value={filterEmail}
-          onChange={(e) => setFilterEmail(e.target.value)}
-          style={{
-            padding: "0.5rem",
-            borderRadius: "6px",
-            border: "1px solid #ccc",
-          }}
-        >
-          <option value="">Show All</option>
-          {Object.values(uidToEmailMap).map((email, i) => (
-            <option key={i} value={email}>
-              {email}
-            </option>
-          ))}
-        </select>
-      </div>
-
+      {/* Task Columns */}
       <div className="task-columns">
         {renderColumn("todo")}
         {renderColumn("inprogress")}

@@ -1,20 +1,17 @@
-import { useParams } from "react-router-dom";
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { Link, useParams } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import TaskBoard from "../components/TaskBoard";
 import InviteMember from "../components/InviteMember";
+import "./WorkspaceDetail.css";
+
+const WorkspaceDetailWrapper = () => {
+  const { id } = useParams();
+  return <WorkspaceDetail id={id} />;
+};
 
 const WorkspaceDetail = () => {
   const { id } = useParams();
@@ -30,7 +27,6 @@ const WorkspaceDetail = () => {
           const workspaceData = docSnap.data();
           setWorkspace(workspaceData);
 
-          // Fetch email IDs of members from their UIDs
           if (workspaceData.members && workspaceData.members.length > 0) {
             const memberEmailsArr = [];
 
@@ -39,7 +35,7 @@ const WorkspaceDetail = () => {
               const userSnap = await getDoc(userRef);
               if (userSnap.exists()) {
                 const userData = userSnap.data();
-                memberEmailsArr.push(userData.email);
+                memberEmailsArr.push({ email: userData.email, uid });
               }
             }
 
@@ -59,7 +55,7 @@ const WorkspaceDetail = () => {
   if (!workspace) return <p>Loading workspace...</p>;
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="workspace-detail">
       <h2>Workspace: {workspace.name}</h2>
       <p>
         <strong>Created By:</strong> {workspace.createdBy}
@@ -70,21 +66,15 @@ const WorkspaceDetail = () => {
       </p>
 
       <h3>Members:</h3>
-      <ul>
+      <ul className="member-list">
         {memberEmails.length > 0 ? (
           memberEmails.map((member, index) => (
-            <li key={index} style={{ marginBottom: "0.5rem" }}>
-              {member.email}{" "}
+            <li key={index} className="member-item">
+              {member.email}
               <span
-                style={{
-                  backgroundColor:
-                    member.uid === workspace.createdBy ? "#4CAF50" : "#888",
-                  color: "white",
-                  padding: "2px 6px",
-                  borderRadius: "4px",
-                  fontSize: "0.75rem",
-                  marginLeft: "0.5rem",
-                }}
+                className={`member-role ${
+                  member.uid === workspace.createdBy ? "owner" : ""
+                }`}
               >
                 {member.uid === workspace.createdBy ? "Owner" : "Member"}
               </span>
@@ -94,11 +84,12 @@ const WorkspaceDetail = () => {
           <p>No members yet.</p>
         )}
       </ul>
-      <hr style={{ margin: "2rem 0" }} />
 
-      {/* 👇 Task Board Section */}
+      <hr className="section-divider" />
+
+      {/* Task Board & Invite */}
       <TaskBoard workspaceId={id} members={memberEmails} />
-      <InviteMember workspaceId={workspaceId} />
+      <InviteMember workspaceId={id} />
     </div>
   );
 };

@@ -1,46 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
+import "./Register.css";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { register } = useAuthContext();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await register(email, password);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err.message);
-    }
+
+    // ✅ You can also add Firebase registration logic here
+    // Simulate registration success
+    console.log("User registered!");
+
+    // ✅ Redirect to login page after registration
+    navigate("/login");
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br />
-        {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="auth-container">
+      <h2>Create Your Account</h2>
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <input type="text" placeholder="Full Name" required />
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
         <button type="submit">Register</button>
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
       </form>
     </div>
   );

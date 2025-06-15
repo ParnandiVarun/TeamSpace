@@ -1,46 +1,40 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
+import React from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./Login.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const { login } = useAuthContext();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await login(email, password);
+
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    // Simulate success – replace with Firebase logic
+    if (email && password) {
+      // ✅ Redirect to dashboard
       navigate("/dashboard");
-    } catch (err) {
-      setError("Invalid credentials");
+    } else {
+      alert("Please enter both email and password");
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="auth-container">
+      <h2>Login to TeamSpace</h2>
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <input name="email" type="email" placeholder="Email" required />
         <input
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br />
-        <input
+          name="password"
           type="password"
           placeholder="Password"
           required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
         />
-        <br />
-        {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit">Login</button>
+        <p>
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
       </form>
     </div>
   );
