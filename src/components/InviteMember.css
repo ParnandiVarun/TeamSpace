@@ -1,0 +1,36 @@
+.invite-member-container {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 400px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.invite-member-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.invite-member-input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.invite-member-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #2196f3;
+  color: white;
+  cursor: pointer;
+}
+
+.invite-message {
+  margin-top: 0.5rem;
+  color: #333;
+  font-size: 0.85rem;
+}

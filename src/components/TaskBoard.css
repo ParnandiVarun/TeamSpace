@@ -1,0 +1,92 @@
+.task-board {
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.task-form {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.task-form input,
+.task-form select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.task-form button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.task-columns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.task-column {
+  flex: 1;
+  min-width: 280px;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  min-height: 300px;
+}
+
+.task-column h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.task-card {
+  background: white;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-card p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.assigned-to,
+.due-date {
+  font-size: 0.75rem;
+  color: gray;
+}
+
+.task-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.task-actions button {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.task-actions .delete-btn {
+  background-color: crimson;
+  color: white;
+}
+
+.task-actions .edit-btn {
+  background-color: #4caf50;
+  color: white;
+}
